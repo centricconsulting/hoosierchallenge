@@ -2,11 +2,13 @@ package test
 
 import org.specs2.mutable._
 import org.specs2.specification.Scope
-import java.io.FileInputStream
+
+import java.io.{FileOutputStream, FileInputStream}
+
 import helper.CCDHelper
 
-class ParseCCD extends Specification {
-  "CCD Parser" should {
+class CCDHelperSpec extends Specification {
+  "CCDHelper" should {
     "Read title" in new docs {
       doc.title() must startWith("Editha Tester")
     }

@@ -2,11 +2,13 @@ package helper
 
 import collection.JavaConversions._
 
-import java.io.InputStream
+import java.io.{OutputStream, InputStream}
+
 import org.openhealthtools.mdht.uml.cda.Section
+import org.openhealthtools.mdht.uml.cda.util.CDAUtil
 
 class CCDHelper(stream:InputStream) {
-  private val doc = org.openhealthtools.mdht.uml.cda.util.CDAUtil.load(stream)
+  private val doc = CDAUtil.load(stream)
 
   def title() : String = {
     doc.getTitle.getText
@@ -17,5 +19,8 @@ class CCDHelper(stream:InputStream) {
   }
   def findAllSections() : Seq[Section] = {
     doc.getAllSections
+  }
+  def writeToStream(stream:OutputStream) = {
+    CDAUtil.save(doc, stream)
   }
 }
