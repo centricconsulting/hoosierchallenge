@@ -3,21 +3,22 @@ package test
 import org.specs2.mutable._
 import org.specs2.specification.Scope
 import java.io.FileInputStream
+import helper.CCDHelper
 
 class ParseCCD extends Specification {
   "CCD Parser" should {
     "Read title" in new docs {
-      doc.getTitle.getText must startWith("Editha Tester")
+      doc.title() must startWith("Editha Tester")
     }
-    "Read patient first name" in new docs {
-      doc.getRecordTargets().get(0).getPatientRole.getPatient.getNames.get(0).getGivens.get(0).getText must equalTo("Editha")
+    "Read patient name" in new docs {
+      doc.patientName() must equalTo("Editha Tester")
     }
-    "Read patient last name" in new docs {
-      doc.getRecordTargets().get(0).getPatientRole.getPatient.getNames.get(0).getFamilies.get(0).getText must equalTo("Tester")
+    "Count number of sections" in new docs {
+      doc.findAllSections().size must equalTo(12)
     }
   }
 }
 
 trait docs extends Scope {
-  val doc = org.openhealthtools.mdht.uml.cda.util.CDAUtil.load(new FileInputStream("data/HHIC_CCD_1.xml"))
+  val doc = new CCDHelper(new FileInputStream("data/HHIC_CCD_1.xml"))
 }
