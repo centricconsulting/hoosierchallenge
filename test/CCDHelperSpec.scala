@@ -3,7 +3,7 @@ package test
 import org.specs2.mutable._
 import org.specs2.specification.Scope
 
-import java.io.{FileOutputStream, FileInputStream}
+import java.io.{FileInputStream}
 
 import helper.CCDHelper
 

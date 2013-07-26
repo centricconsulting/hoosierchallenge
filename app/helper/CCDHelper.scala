@@ -20,6 +20,9 @@ class CCDHelper(stream:InputStream) {
   def findAllSections() : Seq[Section] = {
     doc.getAllSections
   }
+  def findSectionByTitle(title:String) : Option[Section] = {
+    findAllSections().find(s => title == s.getTitle.getText)
+  }
   def writeToStream(stream:OutputStream) = {
     CDAUtil.save(doc, stream)
   }
