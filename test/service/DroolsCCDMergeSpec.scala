@@ -16,7 +16,8 @@ class DroolsCCDMergeSpec extends Specification {
       doc2.findSectionByTitle("Problems").get.getEntries.size() must equalTo(1)
 
       val merged = DroolsCCDMerge.mergeDocs(Seq(doc1, doc2))
-      merged.findSectionByTitle("Problems").get.getEntries.size() must equalTo(4)
+      merged.isEmpty must equalTo(false)
+      merged.get.findSectionByTitle("Problems").get.getEntries.size() must equalTo(4)
     }
   }
 }

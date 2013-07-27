@@ -4,11 +4,15 @@ import collection.JavaConversions._
 
 import java.io.{OutputStream, InputStream}
 
-import org.openhealthtools.mdht.uml.cda.Section
+import org.openhealthtools.mdht.uml.cda.{ClinicalDocument, Section}
 import org.openhealthtools.mdht.uml.cda.util.CDAUtil
 
-class CCDHelper(stream:InputStream) {
-  private val doc = CDAUtil.load(stream)
+class CCDHelper (d:ClinicalDocument) {
+  private val doc = d
+
+  def this(stream:InputStream) {
+    this(CDAUtil.load(stream))
+  }
 
   def title() : String = {
     doc.getTitle.getText
@@ -21,7 +25,7 @@ class CCDHelper(stream:InputStream) {
     doc.getAllSections
   }
   def findSectionByTitle(title:String) : Option[Section] = {
-    findAllSections().find(s => title == s.getTitle.getText)
+    findAllSections().find{s => title == (if(Option(s.getTitle).isEmpty) "" else s.getTitle.getText)}
   }
   def writeToStream(stream:OutputStream) = {
     CDAUtil.save(doc, stream)
