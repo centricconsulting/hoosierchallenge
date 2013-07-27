@@ -1,9 +1,10 @@
-package service
+package test.service
 
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
 import helper.CCDHelper
+import service.DroolsCCDMerge
 
 import java.io.FileInputStream
 
@@ -14,7 +15,7 @@ class DroolsCCDMergeSpec extends Specification {
       doc1.findSectionByTitle("Problems").get.getEntries.size() must equalTo(3)
       doc2.findSectionByTitle("Problems").get.getEntries.size() must equalTo(1)
 
-      val merged = DroolsCCDMerge.newCCDMerge().mergeDocs(Seq(doc1, doc2))
+      val merged = DroolsCCDMerge.mergeDocs(Seq(doc1, doc2))
       merged.findSectionByTitle("Problems").get.getEntries.size() must equalTo(4)
     }
   }
