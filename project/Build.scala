@@ -11,7 +11,8 @@ object ApplicationBuild extends Build {
     // Add your project dependencies here,
     jdbc,
     anorm,
-    "org.drools" % "drools-core" % "5.5.0.Final"
+    "org.drools" % "drools-core" % "5.5.0.Final",
+    "org.drools" % "drools-compiler" % "5.5.0.Final"
   )
 
 
