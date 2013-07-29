@@ -14,6 +14,9 @@ class CCDHelper (d:ClinicalDocument) {
     this(CDAUtil.load(stream))
   }
 
+  def document() : ClinicalDocument = {
+    doc
+  }
   def title() : String = {
     doc.getTitle.getText
   }

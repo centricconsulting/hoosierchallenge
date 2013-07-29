@@ -24,5 +24,5 @@ class DroolsCCDMergeSpec extends Specification {
 
 trait testDocs extends Scope {
   val doc1 = new CCDHelper(new FileInputStream("data/HHIC_CCD_1.xml"))
-  val doc2 = new CCDHelper(new FileInputStream("data/HHIC_CCD_3.xml"))
+  val doc2 = new CCDHelper(new FileInputStream("data/HHIC_CCD_2.xml"))
 }

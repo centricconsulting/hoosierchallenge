@@ -16,9 +16,10 @@ public class DroolsMergeRulesFactory {
     KnowledgeBuilder builder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
     // First we need to add our DSL specification
-    builder.add(ResourceFactory.newClassPathResource("merge-rules.dsl", DroolsMergeRulesFactory.class), ResourceType.DSL);
+    //builder.add(ResourceFactory.newClassPathResource("merge-rules.dsl", DroolsMergeRulesFactory.class), ResourceType.DSL);
     // Now the DSLR
-    builder.add(ResourceFactory.newClassPathResource("merge-rules.dslr", DroolsMergeRulesFactory.class), ResourceType.DSLR);
+    //builder.add(ResourceFactory.newClassPathResource("merge-rules.dslr", DroolsMergeRulesFactory.class), ResourceType.DSLR);
+    builder.add(ResourceFactory.newClassPathResource("merge-rules.drl", DroolsMergeRulesFactory.class), ResourceType.DRL);
 
     if(builder.hasErrors()) {
       throw new RuntimeException("Couldn't build rules" + builder.getErrors());

@@ -1,0 +1,13 @@
+import helper.CCDHelper
+import service.MergedCCD
+
+# Merge entire Encounters section
+rule ""
+salience 1000
+when
+  m : MergedCCD()
+  h : CCDHelper(h.findSectionByTitle("Encounters").isEmpty() == true)
+then
+  m.helper().document().addSection(h.findSectionByTitle("Encounters").get());
+  retract(h);
+end
