@@ -6,7 +6,7 @@ rule ""
 salience 1000
 when
   m : MergedCCD()
-  h : CCDHelper(h.findSectionByTitle("Encounters").isEmpty() == true)
+  h : CCDHelper(h.findSectionByTitle("Encounters").isEmpty() == false)
 then
   m.helper().document().addSection(h.findSectionByTitle("Encounters").get());
   retract(h);

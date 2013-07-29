@@ -10,6 +10,16 @@ import java.io.FileInputStream
 
 class DroolsCCDMergeSpec extends Specification {
   "DroolsCCDMerge" should {
+    "Just try to merge some sections - bogus" in new testDocs {
+      // Preconditions
+      doc1.findAllSections().size must equalTo(12)
+      doc2.findAllSections().size must equalTo(10)
+
+      val merged = DroolsCCDMerge.mergeDocs(Seq(doc1, doc2))
+      merged.isEmpty must equalTo(false)
+      merged.get.document().getAllSections.size() must equalTo(13)
+    }
+
     "Merge two docs with no overlapping problems" in new testDocs {
       // Preconditions
       doc1.findSectionByTitle("Problems").get.getEntries.size() must equalTo(3)

@@ -2,8 +2,9 @@ package service
 
 import helper.CCDHelper
 
+import collection.JavaConversions._
+
 import org.drools.command.CommandFactory
-import org.drools.ClassObjectFilter
 
 case class MergedCCD(helper:CCDHelper)
 
@@ -18,9 +19,11 @@ object DroolsCCDMerge {
       rules.insert(new MergedCCD(master))
       toMerge.foreach(d => rules.insert(d))
       rules.execute(CommandFactory.newFireAllRules())
-      val output = rules.getObjects(new ClassObjectFilter(MergedCCD.getClass))
 
-      if (output.isEmpty) None else Some(output.iterator().next().asInstanceOf[MergedCCD].helper)
+      val output = rules.getObjects()
+      val merged = output.find(o => o.isInstanceOf[MergedCCD])
+
+      if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
     }
     finally {
       rules.dispose()
