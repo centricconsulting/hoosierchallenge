@@ -1,7 +1,21 @@
 @(message: String)
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message)
-    
+@main("Centric CCD Merge Tool") {
+
+  <form>
+    <fieldset>
+      <div class="form-group">
+        <label for="ccd1">First CCD file</label>
+        <input type="file" id="ccd1">
+        <p class="help-block">Choose the first CCD file that will be merged</p>
+      </div>
+      <div class="form-group">
+        <label for="ccd2">Second CCD file</label>
+        <input type="file" id="ccd2">
+        <p class="help-block">Choose the second CCD file that will be merged</p>
+      </div>
+      <button type="submit" class="btn btn-default btn-primary">Submit</button>
+    </fieldset>
+  </form>
+
 }
