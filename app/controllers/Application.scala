@@ -3,11 +3,11 @@ package controllers
 import java.io.ByteArrayOutputStream
 
 import play.api._
+import play.api.libs.Files
 import play.api.mvc._
 
 import helper.CCDHelper
 import service.DroolsCCDMerge
-import play.api.libs.Files
 
 object Application extends Controller {
 
