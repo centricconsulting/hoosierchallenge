@@ -2,7 +2,7 @@ package helper
 
 import collection.JavaConversions._
 
-import java.io.{OutputStream, InputStream}
+import java.io.{ByteArrayInputStream, OutputStream, InputStream}
 
 import org.openhealthtools.mdht.uml.cda.{ClinicalDocument, Section}
 import org.openhealthtools.mdht.uml.cda.util.CDAUtil
@@ -12,6 +12,10 @@ class CCDHelper (d:ClinicalDocument) {
 
   def this(stream:InputStream) {
     this(CDAUtil.load(stream))
+  }
+
+  def this(str:String) {
+    this(CDAUtil.load(new ByteArrayInputStream(str.getBytes("UTF-8"))))
   }
 
   def document() : ClinicalDocument = {

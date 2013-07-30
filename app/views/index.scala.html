@@ -1,21 +1,15 @@
 @(message: String)
 
-@main("Centric CCD Merge Tool") {
+  @main("Centric CCD Merge Tool") {
 
-  <form>
-    <fieldset>
-      <div class="form-group">
-        <label for="ccd1">First CCD file</label>
-        <input type="file" id="ccd1">
-        <p class="help-block">Choose the first CCD file that will be merged</p>
-      </div>
-      <div class="form-group">
-        <label for="ccd2">Second CCD file</label>
-        <input type="file" id="ccd2">
-        <p class="help-block">Choose the second CCD file that will be merged</p>
-      </div>
-      <button type="submit" class="btn btn-default btn-primary">Submit</button>
-    </fieldset>
-  </form>
-
-}
+    @helper.form(action = routes.Application.mergeDocs, 'enctype -> "multipart/form-data") {
+      <fieldset>
+        <div class="form-group">
+          <label for="ccd">CCD files</label>
+          <input type="file" name="ccd" id="ccd" multiple="multiple">
+          <p class="help-block">Choose the CCD files that will be merged</p>
+        </div>
+        <button type="submit" class="btn btn-default btn-primary">Submit</button>
+      </fieldset>
+    }
+  }
