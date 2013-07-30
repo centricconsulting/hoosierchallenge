@@ -4,11 +4,10 @@ import java.io.ByteArrayOutputStream
 
 import play.api._
 import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
 
 import helper.CCDHelper
 import service.DroolsCCDMerge
+import play.api.libs.Files
 
 object Application extends Controller {
 
@@ -18,9 +17,10 @@ object Application extends Controller {
 
   def mergeDocs = Action { request =>
     val postedFiles = request.body.asMultipartFormData.get.files
-    val helpers = postedFiles.map{f => System.out.println(f.ref.toString); new CCDHelper(f.ref.toString)}
+    val helpers = postedFiles.map(f => new CCDHelper(Files.readFile(f.ref.file)))
 
     val merged = DroolsCCDMerge.mergeDocs(helpers)
+
     val outStream = new ByteArrayOutputStream()
     merged.get.writeToStream(outStream)
 
