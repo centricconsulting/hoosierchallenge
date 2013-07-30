@@ -1,13 +1,14 @@
 package controllers
 
+import java.io.ByteArrayOutputStream
+
 import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 
-import service.DroolsCCDMerge
 import helper.CCDHelper
-import java.io.ByteArrayOutputStream
+import service.DroolsCCDMerge
 
 object Application extends Controller {
 
