@@ -15,7 +15,13 @@ object Transaction {
     DB.withConnection{ implicit connection =>
       SQL("select * from transactions order by id desc limit 20").apply().map( row =>
         Transaction(row[Int]("id"), row[Date]("created_at"))
-      ).toSeq
+      ).toList
+    }
+  }
+
+  def saveTransaction() = {
+    DB.withConnection{ implicit connection =>
+      SQL("insert into transactions (created_at) values({now})").on("now" -> new Date()).apply()
     }
   }
 }

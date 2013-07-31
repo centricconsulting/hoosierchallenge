@@ -1,11 +1,15 @@
 package service
 
-
 import collection.JavaConversions._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+import java.io.ByteArrayOutputStream
 
 import org.drools.command.CommandFactory
+
 import wrapper.CCDHelper
-import java.io.ByteArrayOutputStream
+import model.Transaction
 
 case class MergedCCD(helper:CCDHelper)
 
@@ -24,7 +28,12 @@ object DroolsCCDMerge {
       val output = rules.getObjects()
       val merged = output.find(o => o.isInstanceOf[MergedCCD])
 
-      if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
+      val result = if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
+
+      // Let's save the results of this merge, but do it asynchronously
+      Future{ Transaction.saveTransaction() }
+
+      result
     }
     finally {
       rules.dispose()
