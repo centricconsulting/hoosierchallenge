@@ -2,7 +2,7 @@ package wrapper
 
 import collection.JavaConversions._
 
-import java.io.{ByteArrayInputStream, OutputStream, InputStream}
+import java.io.{ByteArrayOutputStream, ByteArrayInputStream, OutputStream, InputStream}
 
 import org.openhealthtools.mdht.uml.cda.{ClinicalDocument, Section}
 import org.openhealthtools.mdht.uml.cda.util.CDAUtil
@@ -36,5 +36,16 @@ class CCDHelper (d:ClinicalDocument) {
   }
   def writeToStream(stream:OutputStream) = {
     CDAUtil.save(doc, stream)
+  }
+  override def toString() : String = {
+    val buf = new ByteArrayOutputStream()
+    try {
+      writeToStream(buf)
+
+      buf.toString
+    }
+    finally {
+      buf.close()
+    }
   }
 }

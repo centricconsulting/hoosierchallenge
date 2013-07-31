@@ -1,4 +1,4 @@
-drop table if exists transactions;
+drop table if exists transactions cascade;
 create table transactions (
   id serial primary key,
   created_at timestamp with time zone not null default now()

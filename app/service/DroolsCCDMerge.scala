@@ -31,7 +31,7 @@ object DroolsCCDMerge {
       val result = if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
 
       // Let's save the results of this merge, but do it asynchronously
-      Future{ Transaction.saveTransaction() }
+      Future{ Transaction.saveTransaction(docs) }
 
       result
     }

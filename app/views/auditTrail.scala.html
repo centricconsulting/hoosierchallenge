@@ -1,4 +1,4 @@
-@(transactions:Seq[model.Transaction])
+@(transactions:Seq[model.LatestTransaction])
 
 @main("Audit Trail Viewer") {
   <h2>Audit Trail</h2>
@@ -9,13 +9,15 @@
       <tr>
         <th>Id</th>
         <th>Date</th>
+        <th>Number of documents</th>
       </tr>
     </thead>
     <tbody>
       @transactions.map{ tx =>
         <tr>
           <td>@tx.id</td>
-          <td>@tx.created</td>
+          <td>@tx.created.format("yyyy-MM-dd hh:mm:ss,SSS a Z")</td>
+          <td>@tx.numDocs</td>
         </tr>
       }
     </tbody>
