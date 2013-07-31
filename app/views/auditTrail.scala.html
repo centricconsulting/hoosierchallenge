@@ -1,0 +1,23 @@
+@(transactions:Seq[model.Transaction])
+
+@main("Audit Trail Viewer") {
+  <h2>Audit Trail</h2>
+  <h3>Latest @transactions.size transactions</h3>
+
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      @transactions.map{ tx =>
+        <tr>
+          <td>@tx.id</td>
+          <td>@tx.created</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

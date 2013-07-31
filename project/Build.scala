@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "org.drools" % "drools-core" % "5.5.0.Final",
-    "org.drools" % "drools-compiler" % "5.5.0.Final"
+    "org.drools" % "drools-compiler" % "5.5.0.Final",
+    "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
   )
 
 

@@ -1,15 +1,8 @@
-@(message: String)
+@main("Welcome") {
 
-  @main("Centric CCD Merge Tool") {
+<div class="hero-unit">
+  <h2>Welcome</h2>
+  <p>The frontend to the Centric-developed CCD Merge API, the CCD Merge Tool allows users to perform ad-hoc merges of CCD file as well as examine the audit trail of merges the API has performed.</p>
+</div>
 
-    @helper.form(action = routes.Application.mergeDocs, 'enctype -> "multipart/form-data") {
-      <fieldset>
-        <div class="form-group">
-          <label for="ccd">CCD files</label>
-          <input type="file" name="ccd" id="ccd" multiple="multiple">
-          <p class="help-block">Choose the CCD files that will be merged</p>
-        </div>
-        <button type="submit" class="btn btn-default btn-primary">Submit</button>
-      </fieldset>
-    }
-  }
+}

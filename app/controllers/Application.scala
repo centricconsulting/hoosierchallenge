@@ -8,11 +8,22 @@ import play.api.mvc._
 
 import helper.CCDHelper
 import service.DroolsCCDMerge
+import model.Transaction
 
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index())
+  }
+
+  def adhoc = Action {
+    Ok(views.html.adhoc())
+  }
+
+  def auditTrail = Action {
+    val transactions = Transaction.findLatestTransactions()
+
+    Ok(views.html.auditTrail(transactions))
   }
 
   def mergeDocs = Action { request =>
