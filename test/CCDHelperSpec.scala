@@ -5,7 +5,7 @@ import org.specs2.specification.Scope
 
 import java.io.{FileInputStream}
 
-import helper.CCDHelper
+import wrapper.CCDHelper
 
 class CCDHelperSpec extends Specification {
   "CCDHelper" should {

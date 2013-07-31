@@ -1,4 +1,4 @@
-import helper.CCDHelper
+import wrapper.CCDHelper
 import service.MergedCCD
 
 # Merge entire Encounters section

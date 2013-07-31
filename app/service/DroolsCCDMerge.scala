@@ -1,10 +1,10 @@
 package service
 
-import helper.CCDHelper
 
 import collection.JavaConversions._
 
 import org.drools.command.CommandFactory
+import wrapper.CCDHelper
 
 case class MergedCCD(helper:CCDHelper)
 

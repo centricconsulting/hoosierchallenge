@@ -1,7 +1,29 @@
-@(message: String)
+@(originals:Seq[wrapper.CCDHelper], output:wrapper.CCDHelper)
 
 @main("Files Merged") {
 
-    @message
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Input/Output</th>
+        <th>Title</th>
+        <th>Number of Sections</th>
+      </tr>
+    </thead>
+    <tbody>
+      @originals.map{ o =>
+        <tr>
+          <td>Input</td>
+          <td>@o.title()</td>
+          <td>@o.findAllSections().size</td>
+        </tr>
+      }
+      <tr>
+        <td><strong>Output</strong></td>
+        <td>@output.title()</td>
+        <td>@output.findAllSections().size</td>
+      </tr>
+    </tbody>
+  </table>
 
 }

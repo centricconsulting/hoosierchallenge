@@ -6,9 +6,9 @@ import play.api._
 import play.api.libs.Files
 import play.api.mvc._
 
-import helper.CCDHelper
 import service.DroolsCCDMerge
 import model.Transaction
+import wrapper.CCDHelper
 
 object Application extends Controller {
 
@@ -32,10 +32,7 @@ object Application extends Controller {
 
     val merged = DroolsCCDMerge.mergeDocs(helpers)
 
-    val outStream = new ByteArrayOutputStream()
-    merged.get.writeToStream(outStream)
-
-    Ok(views.html.merged(outStream.toString))
+    Ok(views.html.merged(helpers, merged.get))
   }
   
 }

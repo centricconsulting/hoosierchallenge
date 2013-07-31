@@ -3,10 +3,10 @@ package test.service
 import org.specs2.mutable.Specification
 import org.specs2.specification.Scope
 
-import helper.CCDHelper
 import service.DroolsCCDMerge
 
 import java.io.FileInputStream
+import wrapper.CCDHelper
 
 class DroolsCCDMergeSpec extends Specification {
   "DroolsCCDMerge" should {
