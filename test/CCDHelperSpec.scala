@@ -1,11 +1,11 @@
 package test
 
+import _root_.util.CCDHelper
 import org.specs2.mutable._
 import org.specs2.specification.Scope
 
 import java.io.{FileInputStream}
 
-import wrapper.CCDHelper
 
 class CCDHelperSpec extends Specification {
   "CCDHelper" should {

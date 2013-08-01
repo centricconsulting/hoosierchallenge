@@ -1,4 +1,4 @@
-package wrapper
+package util
 
 import collection.JavaConversions._
 

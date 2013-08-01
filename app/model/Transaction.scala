@@ -6,8 +6,7 @@ import play.api.db._
 
 import java.util.Date
 
-import wrapper.CCDHelper
-import util.EncodingUtil
+import util.{CCDHelper, EncodingUtil}
 
 case class Transaction(id:Long, created:Date)
 case class TransactionDocument(id:Long, created:Date, document:String, numberOfSections:Int, title:String) // document => Base64 representation of gzipped doc

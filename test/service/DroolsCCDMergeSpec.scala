@@ -6,7 +6,7 @@ import org.specs2.specification.Scope
 import service.DroolsCCDMerge
 
 import java.io.FileInputStream
-import wrapper.CCDHelper
+import util.CCDHelper
 
 class DroolsCCDMergeSpec extends Specification {
   "DroolsCCDMerge" should {

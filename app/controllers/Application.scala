@@ -8,7 +8,7 @@ import play.api.mvc._
 
 import service.DroolsCCDMerge
 import model.Transaction
-import wrapper.CCDHelper
+import util.CCDHelper
 
 object Application extends Controller {
 

@@ -1,8 +1,8 @@
-import wrapper.CCDHelper
+import util.CCDHelper
 import service.MergedCCD
 
 # Merge entire Encounters section
-rule ""
+rule "Merge entire Encounters"
 salience 1000
 when
   m : MergedCCD()
