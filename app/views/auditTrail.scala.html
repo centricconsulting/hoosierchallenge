@@ -1,23 +1,41 @@
-@(transactions:Seq[model.LatestTransaction])
+@(txDocs:Seq[Seq[model.TransactionDocument]])
 
 @main("Audit Trail Viewer") {
   <h2>Audit Trail</h2>
-  <h3>Latest @transactions.size transactions</h3>
+  <h3>Latest @txDocs.size transactions</h3>
 
   <table class="table table-condensed">
     <thead>
       <tr>
         <th>Id</th>
         <th>Date</th>
-        <th>Number of documents</th>
+        <th>Documents</th>
       </tr>
     </thead>
     <tbody>
-      @transactions.map{ tx =>
+      @txDocs.map{ l =>
         <tr>
-          <td>@tx.id</td>
-          <td>@tx.created.format("yyyy-MM-dd hh:mm:ss,SSS a Z")</td>
-          <td>@tx.numDocs</td>
+          <td>@l(0).id</td>
+          <td>@l(0).created.format("yyyy-MM-dd hh:mm:ss,SSS a Z")</td>
+          <td>
+            <ul class="nav nav-tabs">
+              @l.zipWithIndex.map{ case(doc, idx) =>
+                <li class="@(if (idx == 0) "active")"><a href="#tx@(doc.id)-@idx" data-toggle="tab">Document @idx</a></li>
+              }
+            </ul>
+            <div class="tab-content">
+              @l.zipWithIndex.map{ case(doc, idx) =>
+                <div id="tx@(doc.id)-@idx" class="tab-pane @(if (idx == 0) "active")">
+                  <div>
+                    <strong>Title: </strong>@doc.title
+                  </div>
+                  <div>
+                    <strong>Sections: </strong>@doc.numberOfSections
+                  </div>
+                </div>
+              }
+            </div>
+          </td>
         </tr>
       }
     </tbody>

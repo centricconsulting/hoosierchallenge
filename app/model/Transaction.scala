@@ -4,28 +4,24 @@ import anorm._
 import play.api.Play._
 import play.api.db._
 
-import java.io.ByteArrayOutputStream
 import java.util.Date
-import java.util.zip.GZIPOutputStream
 
 import wrapper.CCDHelper
+import util.EncodingUtil
 
 case class Transaction(id:Long, created:Date)
-case class TransactionDocument(id:Long, created:Date, document:Array[Byte], transaction:Transaction=null)
+case class TransactionDocument(id:Long, created:Date, document:String, numberOfSections:Int, title:String) // document => Base64 representation of gzipped doc
 case class TransactionRule(id:Long, created:Date, rule:String, transaction:Transaction=null)
 
-case class LatestTransaction(id:Long, created:Date, numDocs:Long)
-
 object Transaction {
-  def findLatestTransactions() : Seq[LatestTransaction] = {
+  def findLatestTransactions() : Seq[TransactionDocument] = {
     DB.withConnection{ implicit connection =>
       SQL(
-        """select t.id, t.created_at, count(d.id) as cnt from transactions t
-        left outer join transaction_documents d on t.id=d.transaction_id
-        group by t.id order by id desc limit 20"""
+        "select transaction_id, document, t.created_at, number_sections, title from transaction_documents d join transactions t on t.id=d.transaction_id order by transaction_id desc limit 20"
       )
       .apply().map( row =>
-        LatestTransaction(row[Long]("id"), row[Date]("created_at"), row[Long]("cnt"))
+        // TODO - what to do about Option?
+        TransactionDocument(row[Long]("transaction_id"), row[Date]("created_at"), EncodingUtil.inflateText(row[String]("document")).get, row[Int]("number_sections"), row[String]("title"))
       ).toList
     }
   }
@@ -37,19 +33,19 @@ object Transaction {
 
       if(txId.isDefined) {
         // Save all documents associated with this merge
-        val bytes : Seq[Array[Byte]] = docs.map{ d =>
-          // TODO - close these streams
-          val str = new ByteArrayOutputStream()
-          val gzip = new GZIPOutputStream(str)
-          gzip.write(d.toString().getBytes("UTF-8"))
-          str.toByteArray
+        val bytes = docs.map{ d =>
+          (d, EncodingUtil.compressText(d.toString()))
         }
-        bytes.foreach(s =>
-          SQL("insert into transaction_documents (transaction_id, document) values({txid}, {bytes})")
-            .on("txid" -> txId.get)
-            .on("bytes" -> s)
-            .executeInsert()
-        )
+        bytes.foreach{ case(d, s) =>
+          if(s.isDefined) {
+            SQL("insert into transaction_documents (transaction_id, number_sections, title, document) values({txid}, {sections}, {title}, {bytes})")
+              .on("txid" -> txId.get)
+              .on("sections" -> d.findAllSections().size)
+              .on("title" -> d.title())
+              .on("bytes" -> s)
+              .executeInsert()
+          }
+        }
       }
     }
     // Save all rules that were fired - how to do that?

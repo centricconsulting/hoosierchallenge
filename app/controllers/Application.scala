@@ -23,7 +23,9 @@ object Application extends Controller {
   def auditTrail = Action {
     val transactions = Transaction.findLatestTransactions()
 
-    Ok(views.html.auditTrail(transactions))
+    val grouped = transactions.groupBy(tx => tx.id)
+    val keys = grouped.keys.toSeq.sortBy(-_)
+    Ok(views.html.auditTrail(keys.map(grouped.get(_).get).toSeq))
   }
 
   def mergeDocs = Action { request =>
