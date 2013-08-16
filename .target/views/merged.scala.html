@@ -1,0 +1,37 @@
+@(originals:Seq[util.CCDHelper], output:util.CCDHelper)
+
+@main("Files Merged") {
+
+  <h2>Merge Results</h2>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Input/Output</th>
+        <th>Title</th>
+        <th>Number of Sections</th>
+      </tr>
+    </thead>
+    <tbody>
+      @originals.map{ o =>
+        <tr>
+          <td>Input</td>
+          <td>@o.title()</td>
+          <td>@o.findAllSections().size</td>
+        </tr>
+      }
+      <tr>
+        <td><strong>Output</strong></td>
+        <td>@output.title()</td>
+        <td>@output.findAllSections().size</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Resultant Document</h3>
+  <div class="well-small">
+    <pre>
+@output.toString()
+    </pre>
+  </div>
+
+}

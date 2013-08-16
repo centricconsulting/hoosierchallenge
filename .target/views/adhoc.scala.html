@@ -1,0 +1,19 @@
+@main("Ad-hoc Merge Tool") {
+
+<h2>Ad-hoc Merge Tool</h2>
+
+<div class="well">
+  <p>Use the file picker to choose multiple CCD documents from your machine, then submit them to our merge API</p>
+</div>
+
+@helper.form(action = routes.Application.mergeDocs, 'enctype -> "multipart/form-data") {
+  <fieldset>
+    <div class="form-group">
+      <label for="ccd">CCD files</label>
+      <input type="file" name="ccd" id="ccd" multiple="multiple">
+      <p class="help-block">Choose the CCD files that will be merged</p>
+    </div>
+    <button type="submit" class="btn btn-default btn-primary">Submit</button>
+  </fieldset>
+}
+}
