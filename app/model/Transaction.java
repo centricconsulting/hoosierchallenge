@@ -1,21 +1,31 @@
 package model;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import javax.sql.DataSource;
+import javax.persistence.*;
+
+import com.avaje.ebean.Ebean;
+//import javax.sql.DataSource;
 //import play.api.*;
-import play.db.*;
+//import play.db.*;
+import play.db.ebean.*;
+import util.CCDHelper;
+import util.EncodingUtil;
 
 
-
-public class Transaction {
-	private long id;
-	private Date created;
+@Entity
+@Table(name="transactions")
+public class Transaction extends Model {
+	@Id
+	@Column(name="id")
+	long id;
+	
+	@Column(name="created_at")
+	Date created;
 	
 	public long getId() {
 		return id;
@@ -33,36 +43,35 @@ public class Transaction {
 		created = value;
 	}
 	
-	public ArrayList<TransactionDocument> findLatestTransactions() throws SQLException {
-		DataSource ds = DB.getDataSource();
-		Connection conn = ds.getConnection();
-		Statement stmt = null;
-		ArrayList<TransactionDocument> transactionDocs = new ArrayList<TransactionDocument>();
-		String sql = "select transaction_id, document, t.created_at, number_sections, title" +
-					" from transaction_documents d" +
-					" join transactions t on t.id=d.transaction_id " +
-					" order by transaction_id desc limit 20";
+	public List<TransactionDocument> findLatestTransactions() {
+		List<TransactionDocument> allDocs = TransactionDocument.find.all();
+		List<TransactionDocument> latestDocs = new ArrayList<TransactionDocument>();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, -168);
+		Date threshold = cal.getTime();
 		
-		try{
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			while(rs.next()){
-				TransactionDocument transactionDoc = new TransactionDocument();
-				transactionDoc.setId(rs.getLong("transaction_id"));
-				transactionDoc.setDocument(rs.getString("document"));
-				transactionDoc.setCreated(rs.getDate("created_at"));
-				transactionDoc.setNumberOfSections(rs.getInt("number_sections"));
-				transactionDoc.setTitle(rs.getString("title"));
-				transactionDocs.add(transactionDoc);
+		for(TransactionDocument doc:allDocs){
+			if(doc.getCreated().after(threshold)){
+				latestDocs.add(doc);
 			}
-			
-		}catch(SQLException e){
-			throw e;
-		}finally{
-			if(stmt != null)
-				stmt.close();
 		}
-		
-		return transactionDocs;
+		return latestDocs;
+	}
+	
+	public void saveTransactions(List<CCDHelper> docs) throws IOException{
+		for(CCDHelper doc: docs){
+			Transaction trans = new Transaction();
+			trans.setCreated(new Date());
+			Ebean.save(trans);
+			
+			String docBytes = EncodingUtil.compressText(docs.toString());
+			
+			TransactionDocument transDoc = new TransactionDocument();
+			transDoc.setDocument(docBytes);
+			transDoc.setCreated(new Date());
+			transDoc.setTransactionId(trans.getId());
+			transDoc.setTitle(doc.getTitle());
+			transDoc.setNumberOfSections(doc.findAllSections().size());
+		}
 	}
 }

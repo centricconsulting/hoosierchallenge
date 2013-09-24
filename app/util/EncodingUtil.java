@@ -9,7 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 public class EncodingUtil {
-	public String compressText(String text) throws IOException{
+	public static String compressText(String text) throws IOException{
 		ByteArrayOutputStream str = new ByteArrayOutputStream(text.length());
 		GZIPOutputStream gzip = new GZIPOutputStream(str);
 		
@@ -28,7 +28,7 @@ public class EncodingUtil {
 		return null;
 	}
 	
-	public String inflateText(String compressed) throws IOException{
+	public static String inflateText(String compressed) throws IOException{
 		ByteArrayInputStream str = new ByteArrayInputStream(Base64.decodeBase64(compressed.getBytes()));
 		GZIPInputStream gunzip = new GZIPInputStream(str);
 		try{

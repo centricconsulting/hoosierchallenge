@@ -2,10 +2,30 @@ package model;
 
 import java.util.Date;
 
-public class TransactionRule {
-	private long id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import play.db.ebean.Model;
+
+@Entity
+@Table(name="transaction_rules")
+public class TransactionRule extends Model {
+	@Id
+	@Column(name="id")
+	long id;
+	
+	@Column(name="created_at")
 	private Date created;
+	
+	@Column(name="rule_contents")
 	private String rule;
+	
+	@Column(name="transaction_id")
+	private long transactionId;
+	
+	@Column(name="")
 	private Transaction transaction = null;
 	
 	public long getId() {
