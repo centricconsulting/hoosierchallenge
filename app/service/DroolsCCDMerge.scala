@@ -19,9 +19,10 @@ class RuleFireListener extends AgendaEventListener {
   var fired = List[(String, String)]()
 
   def afterActivationFired(evt: AfterActivationFiredEvent)  {
-    // TODO - this isn't actually finding what we need
-    val doc = evt.getActivation.getFactHandles.find(f => f.isInstanceOf[CCDHelper])
-    fired = (evt.getActivation.getRule.getName, if(doc.isDefined) doc.get.asInstanceOf[CCDHelper].title() else "") :: fired
+    val factHandles = evt.getActivation.getFactHandles
+    println("Fact count: " + evt.getKnowledgeRuntime().getFactCount());
+    val doc = factHandles.find(f => f.isInstanceOf[CCDHelper])
+    fired = (evt.getActivation.getRule.getMetaData.get("RuleVersion").toString(), if(doc.isDefined) doc.get.asInstanceOf[CCDHelper].title() else "") :: fired
   }
 
   def activationCreated(p1: ActivationCreatedEvent) {}
@@ -49,7 +50,6 @@ object DroolsCCDMerge {
       // Add listener to capture which rules fired
       val listener = new RuleFireListener()
       rules.addEventListener(listener)
-      // TODO - once these are captured we need to store them
 
       rules.execute(CommandFactory.newFireAllRules())
 
@@ -59,7 +59,11 @@ object DroolsCCDMerge {
       val result = if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
 
       // Let's save the results of this merge, but do it asynchronously
-      Future{ Transaction.saveTransaction(docs) }
+      val f = Future{ Transaction.saveTransaction(docs, listener.fired) }
+      
+      f onFailure {
+        case t => println("An error has occured: " + t.getMessage)
+      }
 
       result
     }
