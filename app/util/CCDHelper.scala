@@ -21,6 +21,9 @@ class CCDHelper (d:ClinicalDocument) {
   def document() : ClinicalDocument = {
     doc
   }
+  def id() : String = {
+    doc.getId().getRoot()
+  }
   def title() : String = {
     doc.getTitle.getText
   }

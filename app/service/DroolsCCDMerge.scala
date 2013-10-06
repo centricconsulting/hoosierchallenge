@@ -3,14 +3,13 @@ package service
 import collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import java.io.ByteArrayOutputStream
-
 import org.drools.command.CommandFactory
 import org.drools.event.rule._
-
 import model.Transaction
 import util.CCDHelper
+import org.drools.common.DefaultFactHandle
+import org.drools.runtime.rule.FactHandle
 
 
 case class MergedCCD(helper:CCDHelper)
@@ -21,8 +20,11 @@ class RuleFireListener extends AgendaEventListener {
   def afterActivationFired(evt: AfterActivationFiredEvent)  {
     val factHandles = evt.getActivation.getFactHandles
     println("Fact count: " + evt.getKnowledgeRuntime().getFactCount());
-    val doc = factHandles.find(f => f.isInstanceOf[CCDHelper])
-    fired = (evt.getActivation.getRule.getMetaData.get("RuleVersion").toString(), if(doc.isDefined) doc.get.asInstanceOf[CCDHelper].title() else "") :: fired
+    val doc = factHandles.find(f => f.isInstanceOf[DefaultFactHandle])
+    
+    doc.foreach((f : FactHandle) => 
+    	fired = (evt.getActivation.getRule.getMetaData.get("RuleVersion").toString(), f.asInstanceOf[DefaultFactHandle].getObject().asInstanceOf[CCDHelper].title()) :: fired
+    )
   }
 
   def activationCreated(p1: ActivationCreatedEvent) {}
@@ -50,6 +52,7 @@ object DroolsCCDMerge {
       // Add listener to capture which rules fired
       val listener = new RuleFireListener()
       rules.addEventListener(listener)
+      //rules.addEventListener(new DebugAgendaEventListener)
 
       rules.execute(CommandFactory.newFireAllRules())
 

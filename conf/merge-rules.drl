@@ -3,7 +3,7 @@ import service.MergedCCD
 
 # Merge entire Encounters section
 rule "Merge entire Encounters"
-@RuleVersion("0.1")
+@RuleVersion("Merge entire Encounters 0.1")
 salience 1000
 when
   m : MergedCCD()

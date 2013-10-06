@@ -18,7 +18,7 @@ drop table if exists transaction_rules;
 create table transaction_rules (
   id serial primary key,
   transaction_id int not null references transactions(id),
-  rule_version varchar(10) not null,
+  rule_version varchar(100) not null,
   document_title varchar(500) not null,
   created_at timestamp with time zone not null default now()
 );
