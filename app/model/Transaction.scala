@@ -25,7 +25,7 @@ object Transaction {
     }
   }
 
-  def saveTransaction(docs:Seq[CCDHelper]) = {
+  def saveTransaction(docs:Seq[CCDHelper], firedRules:List[(String, String)]) = {
     // TODO - wrap in a transaction
     DB.withConnection{ implicit connection =>
       val txId : Option[Long] = SQL("insert into transactions (created_at) values({now})").on("now" -> new Date()).executeInsert()
@@ -45,9 +45,16 @@ object Transaction {
               .executeInsert()
           }
         }
+        
+        // Save all rules that were fired
+        firedRules.foreach{ case(ruleVersion, docTitle) =>
+	        SQL("insert into transaction_rules (transaction_id, rule_version, document_title) values({txid}, {rule_version}, {document_title})")
+              .on("txid" -> txId.get)
+              .on("rule_version" -> ruleVersion)
+              .on("document_title" -> docTitle)
+              .executeInsert()
+        }
       }
     }
-    // Save all rules that were fired - how to do that?
-    // TODO
   }
 }
