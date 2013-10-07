@@ -20,6 +20,18 @@ object Application extends Controller {
     Ok(views.html.adhoc())
   }
 
+  def downloadTransactionDocument(id : Long, title : String) = Action { request =>
+    import org.apache.commons.io.IOUtils
+    val documents = Transaction.getTransactionDocumentAsStream(id)
+    documents.map { is =>
+      Ok(IOUtils.toByteArray(is))
+        .withHeaders(
+            CONTENT_TYPE -> "application/octet-stream",
+            CONTENT_DISPOSITION -> "attachment; filename=document.xml".replaceAll("document", title)
+        )
+    }.getOrElse(NotFound("File not found!"))
+  }
+
   def auditTrail = Action {
     val transactions = Transaction.findLatestTransactions()
 
