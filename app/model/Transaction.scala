@@ -37,7 +37,7 @@ object Transaction {
     }
   }
 
-  def saveTransaction(docs:Seq[CCDHelper], firedRules:List[(String, String)]) = {
+  def saveTransaction(docs:Seq[CCDHelper], firedRules:List[(String, String)], mergedCCD : Option[CCDHelper]) = {
     // TODO - wrap in a transaction
     DB.withConnection{ implicit connection =>
       val txId : Option[Long] = SQL("insert into transactions (created_at) values({now})").on("now" -> new Date()).executeInsert()
@@ -56,6 +56,11 @@ object Transaction {
               .on("bytes" -> s)
               .executeInsert()
           }
+        }
+        
+        // TODO save the merged CCD
+        if (mergedCCD.isDefined) {
+          
         }
         
         // Save all rules that were fired

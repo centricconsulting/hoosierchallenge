@@ -11,7 +11,8 @@ create table transaction_documents (
   created_at timestamp with time zone not null default now(),
   document varchar(10000000) not null,
   number_sections int not null default 0,
-  title varchar(500)
+  title varchar(500),
+  is_output boolean default false
 );
 
 drop table if exists transaction_rules;

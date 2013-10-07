@@ -10,7 +10,8 @@ import model.Transaction
 import util.CCDHelper
 import org.drools.common.DefaultFactHandle
 import org.drools.runtime.rule.FactHandle
-
+import scala.util.Try
+import play.modules.mailer._
 
 case class MergedCCD(helper:CCDHelper)
 
@@ -62,10 +63,14 @@ object DroolsCCDMerge {
       val result = if (merged.isEmpty) None else Some(merged.get.asInstanceOf[MergedCCD].helper)
 
       // Let's save the results of this merge, but do it asynchronously
-      val f = Future{ Transaction.saveTransaction(docs, listener.fired) }
+      val f = Future{ Transaction.saveTransaction(docs, listener.fired, result) }
+      
+      f onSuccess {
+        case t => sendEmail("Documents were merged successfully!")
+      }
       
       f onFailure {
-        case t => println("An error has occured: " + t.getMessage)
+        case t => sendEmail(t.getMessage)
       }
 
       result
@@ -73,6 +78,29 @@ object DroolsCCDMerge {
     finally {
       rules.dispose()
     }
+  }
+  
+  private def sendEmail(message : String) = {
+	// a more convenient way to create an email
+	val email = Email(
+	    subject = "Test mail",
+		from = EmailAddress("Praneet Loke sender", "praneet.loke@centricconsulting.com"),
+		text = message,
+		htmlText = message)
+		.to("Praneet Loke TO", "praneetloke@hotmail.com")
+		.replyTo("Praneet Loke REPLY_TO", "praneet.loke@centricconsulting.com")
+
+	val result:Future[Unit] = AsyncMailer.sendEmail(email)
+    result
+      .map { unit =>
+        // mail sent successfully
+      }
+      .recover {
+        case SendEmailException(email, cause) =>
+        	println("Problem sending email: " + cause.getMessage());
+        case SendEmailTransportCloseException(result, cause) =>
+        	println("Could not close the connection.");
+      }
   }
 
   private def cloneCCD(doc:CCDHelper) : CCDHelper = {
