@@ -20,3 +20,5 @@ dist
 /bin
 .target
 **/~$*.docx
+activator*
+**/activator*
