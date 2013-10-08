@@ -10,8 +10,6 @@ import model.Transaction
 import util.CCDHelper
 import org.drools.common.DefaultFactHandle
 import org.drools.runtime.rule.FactHandle
-import scala.util.Try
-import play.modules.mailer._
 
 case class MergedCCD(helper:CCDHelper)
 
@@ -81,26 +79,19 @@ object DroolsCCDMerge {
   }
   
   private def sendEmail(message : String) = {
-	// a more convenient way to create an email
-	val email = Email(
-	    subject = "Test mail",
-		from = EmailAddress("Praneet Loke sender", "praneet.loke@centricconsulting.com"),
-		text = message,
-		htmlText = message)
-		.to("Praneet Loke TO", "praneetloke@hotmail.com")
-		.replyTo("Praneet Loke REPLY_TO", "praneet.loke@centricconsulting.com")
-
-	val result:Future[Unit] = AsyncMailer.sendEmail(email)
-    result
-      .map { unit =>
-        // mail sent successfully
-      }
-      .recover {
-        case SendEmailException(email, cause) =>
-        	println("Problem sending email: " + cause.getMessage());
-        case SendEmailTransportCloseException(result, cause) =>
-        	println("Could not close the connection.");
-      }
+    val f = Future { 
+       AmazonEmailService.sendEmail(message)
+    }
+    
+    f onSuccess {
+      case t => println("Email sent!")
+    }
+    
+    f onFailure {
+      case t => 
+        println("Failed to send email!")
+        println(t.getMessage())
+    }
   }
 
   private def cloneCCD(doc:CCDHelper) : CCDHelper = {
