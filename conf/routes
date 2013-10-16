@@ -2,6 +2,13 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Home page
+GET         /                    controllers.Application.index
+GET         /adhoc-merge         controllers.Application.adhoc
+POST        /adhoc-merge         controllers.Application.mergeDocs
+GET         /audit-trail         controllers.Application.auditTrail
+GET         /download/:id        controllers.Application.downloadTransactionDocument(id: Long, title: String)
+
 # Login page
 GET     /login                      securesocial.controllers.LoginPage.login
 GET     /logout                     securesocial.controllers.LoginPage.logout
@@ -18,17 +25,10 @@ POST    /reset/:token               securesocial.controllers.Registration.handle
 GET     /password                   securesocial.controllers.PasswordChange.page
 POST    /password                   securesocial.controllers.PasswordChange.handlePasswordChange
 
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file        controllers.Assets.at(path="/public", file)
+
 # Providers entry points
 GET     /authenticate/:provider     securesocial.controllers.ProviderController.authenticate(provider)
 POST    /authenticate/:provider     securesocial.controllers.ProviderController.authenticateByPost(provider)
 GET     /not-authorized             securesocial.controllers.ProviderController.notAuthorized
-
-# Home page
-GET         /                    controllers.Application.index
-GET         /adhoc-merge         controllers.Application.adhoc
-POST        /adhoc-merge         controllers.Application.mergeDocs
-GET         /audit-trail         controllers.Application.auditTrail
-GET         /download/:id        controllers.Application.downloadTransactionDocument(id: Long, title: String)
-
-# Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file        controllers.Assets.at(path="/public", file)
