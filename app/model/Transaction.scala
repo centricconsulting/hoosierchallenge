@@ -8,7 +8,7 @@ import util.{CCDHelper, EncodingUtil}
 import java.io.InputStream
 
 case class Transaction(id:Long, created:Date)
-case class TransactionDocument(documentId:Long, id:Long, created:Date, document:String, numberOfSections:Int, title:String) // document => Base64 representation of gzipped doc
+case class TransactionDocument(documentId:Long, id:Long, created:Date, document:String, numberOfSections:Int, title:String, isOutput:Boolean) // document => Base64 representation of gzipped doc
 case class TransactionRule(id:Long, created:Date, rule:String, transaction:Transaction=null)
 
 object Transaction {
@@ -28,11 +28,11 @@ object Transaction {
   def findLatestTransactions() : Seq[TransactionDocument] = {
     DB.withConnection{ implicit connection =>
       SQL(
-        "select d.id, transaction_id, document, t.created_at, number_sections, title from transaction_documents d join transactions t on t.id=d.transaction_id order by transaction_id desc limit 20"
+        "select d.id, transaction_id, document, t.created_at, number_sections, title, is_output from transaction_documents d join transactions t on t.id=d.transaction_id order by transaction_id desc limit 20"
       )
       .apply().map( row =>
         // TODO - what to do about Option?
-        TransactionDocument(row[Long]("id"), row[Long]("transaction_id"), row[Date]("created_at"), EncodingUtil.inflateText(row[String]("document")).get, row[Int]("number_sections"), row[String]("title"))
+        TransactionDocument(row[Long]("id"), row[Long]("transaction_id"), row[Date]("created_at"), EncodingUtil.inflateText(row[String]("document")).get, row[Int]("number_sections"), row[String]("title"), row[Boolean]("is_output"))
       ).toList
     }
   }
@@ -58,9 +58,14 @@ object Transaction {
           }
         }
         
-        // TODO save the merged CCD
+        // save the merged CCD
         if (mergedCCD.isDefined) {
-          
+          SQL("insert into transaction_documents (transaction_id, number_sections, title, document, is_output) values({txid}, {sections}, {title}, {bytes}, true)")
+              .on("txid" -> txId.get)
+              .on("sections" -> mergedCCD.get.findAllSections.size)
+              .on("title" -> mergedCCD.get.title())
+              .on("bytes" -> EncodingUtil.compressText(mergedCCD.get.toString()))
+              .executeInsert()
         }
         
         // Save all rules that were fired

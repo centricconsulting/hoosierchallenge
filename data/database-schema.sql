@@ -23,3 +23,10 @@ create table transaction_rules (
   document_title varchar(500) not null,
   created_at timestamp with time zone not null default now()
 );
+
+GRANT ALL PRIVILEGES ON TABLE transactions TO public;
+GRANT ALL PRIVILEGES ON TABLE transaction_rules TO public;
+GRANT ALL PRIVILEGES ON TABLE transaction_documents TO public;
+GRANT ALL PRIVILEGES ON SEQUENCE transactions_id_seq TO public;
+GRANT ALL PRIVILEGES ON SEQUENCE transaction_rules_id_seq TO public;
+GRANT ALL PRIVILEGES ON SEQUENCE transaction_documents_id_seq TO public;

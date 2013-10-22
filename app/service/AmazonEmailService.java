@@ -11,7 +11,7 @@ import com.amazonaws.auth.PropertiesCredentials;
 
 public class AmazonEmailService {
 	static final String FROM = "praneet.loke@centricconsulting.com";  // Replace with your "From" address. This address must be verified.
-    static final String TO = "praneetloke@hotmail.com"; // Replace with a "To" address. If you have not yet requested
+    static final String TO = "praneet.loke@centricconsulting.com"; // Replace with a "To" address. If you have not yet requested
                                                       // production access, this address must be verified.
     static final String BODY = "";
     static final String SUBJECT = "CCD Merge Status";

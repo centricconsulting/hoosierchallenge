@@ -20,7 +20,11 @@
           <td>
             <ul class="nav nav-tabs">
               @l.zipWithIndex.map{ case(doc, idx) =>
+              	@if(doc.isOutput) {
+                <li class="@(if (idx == 0) "active")"><a href="#tx@(doc.id)-@idx" data-toggle="tab">Merged Document</a></li>
+                } else {
                 <li class="@(if (idx == 0) "active")"><a href="#tx@(doc.id)-@idx" data-toggle="tab">Document @idx</a></li>
+                }
               }
             </ul>
             <div class="tab-content">
